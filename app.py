@@ -6,7 +6,7 @@ from PIL import Image
 import cv2
 import tempfile
 import os
-from src.detector import FaceLandmarkDetector
+from src.detector_simple import FaceLandmarkDetector
 from src.utils import pil_to_cv2, cv2_to_pil, resize_image, calcular_apertura_boca, calcular_apertura_ojos, calcular_inclinacion_cabeza
 from src.config import TOTAL_LANDMARKS
 
@@ -47,7 +47,7 @@ st.markdown("""
 # Título y descripción
 st.title("Detector de Landmarks Faciales y Análisis de Expresiones")
 st.markdown("""
-Esta aplicación detecta **478 puntos clave** en rostros humanos usando MediaPipe y calcula métricas de expresiones faciales.
+Esta aplicación detecta **68 puntos clave** en rostros humanos usando OpenCV y dlib, y calcula métricas de expresiones faciales.
 Subí una imagen o video para analizar las expresiones faciales.
 """)
 
@@ -267,7 +267,7 @@ else:
     # Ejemplo visual
     st.markdown("### Ejemplo de Resultado")
     st.image(
-        "https://ai.google.dev/static/mediapipe/images/solutions/face_landmarker_keypoints.png?hl=es-419",
-        caption="MediaPipe detecta 478 landmarks faciales",
+        "https://pyimagesearch.com/wp-content/uploads/2021/04/face_landmarks_3.jpg",
+        caption="dlib detecta 68 landmarks faciales",
         width=400
     )

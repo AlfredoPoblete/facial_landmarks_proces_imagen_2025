@@ -66,17 +66,18 @@ def calcular_apertura_boca(landmarks, alto, ancho):
     Calcula la apertura de la boca basada en la distancia entre los labios.
 
     Args:
-        landmarks: Objeto de landmarks de MediaPipe
+        landmarks: Objeto de landmarks de dlib (68 puntos)
         alto (int): Alto de la imagen
         ancho (int): Ancho de la imagen
 
     Returns:
         float: Distancia en píxeles entre labio superior e inferior
     """
-    # Landmark 13: labio superior
-    # Landmark 14: labio inferior
-    punto_superior = landmarks.landmark[13]
-    punto_inferior = landmarks.landmark[14]
+    # dlib: boca va del landmark 48 al 67
+    # Usar puntos centrales: 51 (labio superior) y 57 (labio inferior)
+    
+    punto_superior = landmarks.landmark[51]  # Centro del labio superior
+    punto_inferior = landmarks.landmark[57]  # Centro del labio inferior
 
     y1 = punto_superior.y * alto
     y2 = punto_inferior.y * alto
@@ -90,24 +91,29 @@ def calcular_apertura_ojos(landmarks, alto, ancho):
     Calcula la apertura de los ojos basada en la distancia entre párpados.
 
     Args:
-        landmarks: Objeto de landmarks de MediaPipe
+        landmarks: Objeto de landmarks de dlib (68 puntos)
         alto (int): Alto de la imagen
         ancho (int): Ancho de la imagen
 
     Returns:
         tuple: (apertura_ojo_izquierdo, apertura_ojo_derecho) en píxeles
     """
-    # Ojo izquierdo: landmarks 159 (párpado superior), 145 (párpado inferior)
-    # Ojo derecho: landmarks 386 (párpado superior), 374 (párpado inferior)
-
+    # dlib:
+    # Ojo izquierdo: landmarks 36-41
+    # Ojo derecho: landmarks 42-47
+    
+    # Usar centro del párpado superior e inferior de cada ojo
+    # Ojo izquierdo: 38 (superior), 40 (inferior)
+    # Ojo derecho: 44 (superior), 46 (inferior)
+    
     # Ojo izquierdo
-    superior_izq = landmarks.landmark[159]
-    inferior_izq = landmarks.landmark[145]
+    superior_izq = landmarks.landmark[38]
+    inferior_izq = landmarks.landmark[40]
     apertura_izq = abs(superior_izq.y - inferior_izq.y) * alto
 
     # Ojo derecho
-    superior_der = landmarks.landmark[386]
-    inferior_der = landmarks.landmark[374]
+    superior_der = landmarks.landmark[44]
+    inferior_der = landmarks.landmark[46]
     apertura_der = abs(superior_der.y - inferior_der.y) * alto
 
     return apertura_izq, apertura_der
@@ -118,19 +124,20 @@ def calcular_inclinacion_cabeza(landmarks, alto, ancho):
     Calcula la inclinación de la cabeza usando los puntos de los ojos.
 
     Args:
-        landmarks: Objeto de landmarks de MediaPipe
+        landmarks: Objeto de landmarks de dlib (68 puntos)
         alto (int): Alto de la imagen
         ancho (int): Ancho de la imagen
 
     Returns:
         float: Ángulo de inclinación en grados (positivo = inclinado a la derecha)
     """
-    # Usar puntos de los ojos para calcular la inclinación
-    # Ojo izquierdo: landmark 33 (esquina externa)
-    # Ojo derecho: landmark 263 (esquina externa)
+    # dlib:
+    # Usar puntos centrales de los ojos para calcular inclinación
+    # Ojo izquierdo: landmark 38 (centro)
+    # Ojo derecho: landmark 44 (centro)
 
-    ojo_izq = landmarks.landmark[33]
-    ojo_der = landmarks.landmark[263]
+    ojo_izq = landmarks.landmark[38]
+    ojo_der = landmarks.landmark[44]
 
     # Coordenadas en píxeles
     x1 = ojo_izq.x * ancho
